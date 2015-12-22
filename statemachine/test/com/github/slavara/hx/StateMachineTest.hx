@@ -59,9 +59,8 @@ class StateMachineTest {
 		var a = "a";
 		var b = "b";
 		var c = "c";
-		var all = [a, b, c];
 		var smachine = new StateMachine()
-			.addAllToAll(all);
+			.addAllToAll([a, b, c]);
 		Assert.areEqual(a, smachine.currentState);
 		smachine.setState(b);
 		Assert.areEqual(a, smachine.previousState);
@@ -84,5 +83,93 @@ class StateMachineTest {
 			.reset();
 		Assert.isNull(smachine.previousState);
 		Assert.isNull(smachine.currentState);
+	}
+	
+	@Test
+	public function fromAtoBviaC() {
+		var a = "a";
+		var b = "b";
+		var c = "c";
+		var smachine = new StateMachine()
+			.add(a, b, [c])
+			.setState(b);
+		Assert.areEqual(c, smachine.currentState);
+		smachine.release();
+		Assert.areEqual(b, smachine.currentState);
+	}
+	
+	@Test
+	public function addTwoWayViaC() {
+		var a = "a";
+		var b = "b";
+		var c = "c";
+		var smachine = new StateMachine()
+			.addTwoWay(a, b, [c])
+			.setState(b);
+		Assert.areEqual(c, smachine.currentState);
+		smachine.release();
+		Assert.areEqual(b, smachine.currentState);
+		smachine.setState(a);
+		Assert.areEqual(c, smachine.currentState);
+		smachine.release();
+		Assert.areEqual(a, smachine.currentState);
+	}
+	
+	@Test
+	public function addOneToAllViaC() {
+		var from = "from";
+		var all = ["a", "b"];
+		var c = "c";
+		var smachine = new StateMachine()
+			.addOneToAll(from, all, [c])
+			.setState(all[0]);
+		Assert.areEqual(from, smachine.previousState);
+		Assert.areEqual(c, smachine.currentState);
+		smachine.release();
+		Assert.areEqual(c, smachine.previousState);
+		Assert.areEqual(all[0], smachine.currentState);
+		smachine.reset()
+			.addOneToAll(from, all, [c])
+			.setState(all[1]);
+		Assert.areEqual(from, smachine.previousState);
+		Assert.areEqual(c, smachine.currentState);
+		smachine.release();
+		Assert.areEqual(c, smachine.previousState);
+		Assert.areEqual(all[1], smachine.currentState);
+	}
+	
+	@Test
+	public function addAllToAllViaD() {
+		var a = "a";
+		var b = "b";
+		var c = "c";
+		var d = "d";
+		var smachine = new StateMachine()
+			.addAllToAll([a, b, c], [d]);
+		Assert.areEqual(a, smachine.currentState);
+		smachine.setState(b);
+		Assert.areEqual(a, smachine.previousState);
+		Assert.areEqual(d, smachine.currentState);
+		smachine.release();
+		Assert.areEqual(d, smachine.previousState);
+		Assert.areEqual(b, smachine.currentState);
+		smachine.setState(c);
+		Assert.areEqual(b, smachine.previousState);
+		Assert.areEqual(d, smachine.currentState);
+		smachine.release();
+		Assert.areEqual(d, smachine.previousState);
+		Assert.areEqual(c, smachine.currentState);
+		smachine.setState(a);
+		Assert.areEqual(c, smachine.previousState);
+		Assert.areEqual(d, smachine.currentState);
+		smachine.release();
+		Assert.areEqual(d, smachine.previousState);
+		Assert.areEqual(a, smachine.currentState);
+		smachine.setState(c);
+		Assert.areEqual(a, smachine.previousState);
+		Assert.areEqual(d, smachine.currentState);
+		smachine.release();
+		Assert.areEqual(d, smachine.previousState);
+		Assert.areEqual(c, smachine.currentState);
 	}
 }
