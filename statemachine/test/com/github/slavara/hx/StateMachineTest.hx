@@ -172,4 +172,26 @@ class StateMachineTest {
 		Assert.areEqual(d, smachine.previousState);
 		Assert.areEqual(c, smachine.currentState);
 	}
+	
+	@Test
+	public function addTransitionListenerFromAToB() {
+		var a = "a";
+		var b = "b";
+		var smachine = new StateMachine()
+			.add(a, b)
+			.addTransitionListener(a, b, function() Assert.isTrue(true));
+		smachine.setState(b);
+	}
+	
+	@Test
+	public function removeTransitionListenerFromAToB() {
+		var a = "a";
+		var b = "b";
+		var listener:Void->Void = function() Assert.fail('has transition listener from $a to $b');
+		var smachine = new StateMachine()
+			.add(a, b)
+			.addTransitionListener(a, b, listener)
+			.removeTransitionListener(a, b, listener);
+		smachine.setState(b);
+	}
 }
