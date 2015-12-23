@@ -13,6 +13,8 @@ class StateMachine {
 	var _statesQueue:Array<String>;
 	var _transitionListeners:Map<String, Map<String, Array<Void -> Void>>>;
 	var _inTransition:Bool;
+	var _buildFrom:String;
+	var _buildVia:Array<String>;
 	
 	public function reset():StateMachine {
 		currentState = null;
@@ -22,10 +24,26 @@ class StateMachine {
 		_statesQueue = null;
 		_transitionListeners = new Map();
 		_inTransition = false;
+		_buildFrom = null;
+		_buildVia = null;
 		return this;
 	}
 	
+	public function from(state:String):StateMachine {
+		_buildFrom = state;
+		return this;
+	}
+	public function via(states:Array<String>):StateMachine {
+		_buildVia = states;
+		return this;
+	}
+	public function to(state:String):StateMachine {
+		return add(_buildFrom, state, _buildVia);
+	}
+	
 	public function add(from:String, to:String, ?via:Array<String>):StateMachine {
+		_buildFrom = null;
+		_buildVia = null;
 		if(!_transitions.exists(from)) _transitions.set(from, new Map());
 		if(!_transitions.exists(to)) _transitions.set(to, new Map());
 		_transitions.get(from).set(to, new StateTransition(from, to, via));
@@ -50,6 +68,8 @@ class StateMachine {
 	}
 	
 	public function setState(state:String):StateMachine {
+		_buildFrom = null;
+		_buildVia = null;
 		if(currentState == null) {
 			currentState = state;
 			broadcastStateChange(null, currentState);
@@ -76,6 +96,8 @@ class StateMachine {
 	}
 	
 	public function release():StateMachine {
+		_buildFrom = null;
+		_buildVia = null;
 		setNextQueuedState();
 		return this;
 	}

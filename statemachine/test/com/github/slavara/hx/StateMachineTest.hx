@@ -194,4 +194,33 @@ class StateMachineTest {
 			.removeTransitionListener(a, b, listener);
 		smachine.setState(b);
 	}
+	
+	public function fluentFromAToB() {
+		var a = "a";
+		var b = "b";
+		var smachine = new StateMachine()
+			.from(a)
+			.to(b);
+		Assert.areEqual(a, smachine.currentState);
+		smachine.setState(b);
+		Assert.areEqual(a, smachine.previousState);
+		Assert.areEqual(b, smachine.currentState);
+	}
+	
+	public function fluentFromAViaCToB() {
+		var a = "a";
+		var b = "b";
+		var c = "c";
+		var smachine = new StateMachine()
+			.from(a)
+			.via([c])
+			.to(b);
+		Assert.areEqual(a, smachine.currentState);
+		smachine.setState(b);
+		Assert.areEqual(a, smachine.previousState);
+		Assert.areEqual(c, smachine.currentState);
+		smachine.release();
+		Assert.areEqual(c, smachine.previousState);
+		Assert.areEqual(b, smachine.currentState);
+	}
 }
