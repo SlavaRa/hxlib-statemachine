@@ -195,6 +195,7 @@ class StateMachineTest {
 		smachine.setState(b);
 	}
 	
+	@Test
 	public function fluentFromAToB() {
 		var a = "a";
 		var b = "b";
@@ -207,6 +208,7 @@ class StateMachineTest {
 		Assert.areEqual(b, smachine.currentState);
 	}
 	
+	@Test
 	public function fluentFromAViaCToB() {
 		var a = "a";
 		var b = "b";
