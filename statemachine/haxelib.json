@@ -1,0 +1,11 @@
+{
+  "name": "statemachine",
+  "license": "MIT",
+  "tags": ["statemachine"],
+  "description": "",
+  "contributors": ["SlavaRa"],
+  "releasenote": "",
+  "version": "1.0.0",
+  "url": "https://github.com/SlavaRa/hxlib-statemachine",
+  "dependencies": {}
+}
