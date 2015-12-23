@@ -47,8 +47,7 @@ class StateMachine {
 		if(!_transitions.exists(from)) _transitions.set(from, new Map());
 		if(!_transitions.exists(to)) _transitions.set(to, new Map());
 		_transitions.get(from).set(to, new StateTransition(from, to, via));
-		if(currentState == null) currentState = from;
-		return this;
+		return currentState == null ? setState(from) : this;
 	}
 	
 	public function addTwoWay(from:String, to:String, ?via:Array<String>):StateMachine {
