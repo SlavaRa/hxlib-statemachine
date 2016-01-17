@@ -8,7 +8,7 @@ class StateMachine {
 	public var currentState(default, null):String;
 	public var previousState(default, null):String;
 	
-	var _transitions:Map<String, Map<String, StateTransition>>;
+	var _transitions:Map<String, Map<String, Transition>>;
 	var _queuedState:String;
 	var _statesQueue:Array<String>;
 	var _transitionListeners:Map<String, Map<String, Array<Void -> Void>>>;
@@ -46,7 +46,7 @@ class StateMachine {
 		_buildVia = null;
 		if(!_transitions.exists(from)) _transitions.set(from, new Map());
 		if(!_transitions.exists(to)) _transitions.set(to, new Map());
-		_transitions.get(from).set(to, new StateTransition(from, to, via));
+		_transitions.get(from).set(to, new Transition(from, to, via));
 		return currentState == null ? setState(from) : this;
 	}
 	
@@ -153,24 +153,21 @@ class StateMachine {
 	}
 }
 
-private class StateTransition {
+private class Transition {
 	
 	public function new(from:String, to:String, ?via:Array<String>) {
 		this.from = from;
 		this.to = to;
 		if(via != null) {
-			_queue = via.copy();
-			_queue.push(to);
-		}
+			queue = via.copy();
+			queue.push(to);
+		} else queue = [to];
 	}
 	
 	public var from(default, null):String;
 	public var to(default, null):String;
-	
-	var _queue:Array<String>;
-	public var queue(get, null):Array<String>;
-	inline function get_queue():Array<String> return _queue != null ? _queue.copy() : [];
+	public var queue(default, null):Array<String>;
 	
 	public var simple(get, null):Bool;
-	inline function get_simple():Bool return _queue == null;
+	inline function get_simple():Bool return queue == null;
 }
